@@ -26,6 +26,9 @@
                 </tr>
             </thead>
             <tbody>
+                <?php 
+                require('mysqli_connect.php');
+                ?>
                 <tr>
                     <td>ID</td>
                     <td>Bill Gates</td>
