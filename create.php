@@ -5,6 +5,8 @@ try{
 
     $errors = [];
     $success = [];
+
+    //if the form has been submitted via the post method
 if($_SERVER['REQUEST_METHOD'] =='POST'){
 
 
@@ -26,15 +28,16 @@ if($_SERVER['REQUEST_METHOD'] =='POST'){
         //error message in the catch block
     }
 
-
+    //if any of the fieds are empty
     if(empty($name) || empty($email) || empty($phone) || empty($address)) array_push($errors, "ALL FIELD ARE REQUIRED");
     else{
+    //insert into db    
     $insert_query = "INSERT INTO clients (name, email, phone, address) VALUES (?,?,?,?)" ;
     $insert_stmt = mysqli_stmt_init($dbcon);
     mysqli_stmt_prepare($insert_stmt, $insert_query);
     mysqli_stmt_bind_param($insert_stmt,'ssss',$name, $email, $phone, $address);
     if(mysqli_stmt_execute($insert_stmt)){
-
+        //if a row is affected in the DB
         if(mysqli_stmt_affected_rows($insert_stmt) == 1){
             echo "<script>alert('Inserted sucefully')</script>";
             header("Location: home.php");
