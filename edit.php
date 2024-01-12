@@ -1,3 +1,122 @@
 <?php
+    try{
+        require('./mysqli_connect.php');
+        $errors = [];
+        $success =[];
+    
+        if($_SERVER["REQUEST_METHOD"] == "GET"){
+            $id = $_GET['id'];
+    
+            if(isset($_GET['id'])){
+                $select_query = "SELECT name, email, phone, address FROM clients WHERE id = ?";
+                $select_stmt = mysqli_stmt_init($dbcon);
+                mysqli_stmt_prepare($select_stmt,$select_query);
+                mysqli_stmt_bind_param($select_stmt,'i',$id);
+                mysqli_stmt_execute($select_stmt);
+
+                //gets result from prepared statement
+                $result = mysqli_stmt_get_result($select_stmt);
+    
+                if($row = mysqli_fetch_assoc($result)){
+                    var_dump($row);
+                    $name = $row['name'];
+                    $email = $row['email'];
+                    $phone = $row['phone'];
+                    $address = $row['address'];
+
+                    echo $name, $email, $phone, $address;
+                }
+    
+            }  
+        } 
+    
+    }
+
+    catch(Exception $e){
+        echo $e->getMessage();
+    }
+    catch(Error $e){
+        echo $e->getMessage();
+    }
 
 ?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>My Shop</title>
+</head>
+
+<body>
+    <div class="container my-5">
+    
+    <h2>Current Details </h2>
+            <table class="table">
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone No</th>
+                    <th>Address</th>
+                </tr>
+                <tr>
+                <?="
+                    <td>$row[name]</td>
+                    <td>$row[email]</td>
+                    <td>$row[phone]</td>
+                    <td>$row[address]</td>
+                "?>
+                </tr>
+
+            </table>
+
+        <h2>New Client</h2>
+        <form action='create.php' method='post'>
+
+            <div class='row mb-3'>
+                <label for='' class='col-sm-3 col-form-label'>Name</label>
+                <div class='col-sm-6'>
+                    <input type='text' class="form-control" name='name' value='<?=isset($name) ? $name :'' ?>'>
+                </div>
+            </div>
+
+            <div class='row mb-3'>
+                <label for='' class='col-sm-3 col-form-label'>Email</label>
+                <div class='col-sm-6'>
+                    <input type='text' class="form-control" name='email' value='<?=isset($email) ? $email:''?>'>
+                </div>
+            </div>
+
+            <div class='row mb-3'>
+                <label for='' class='col-sm-3 col-form-label'>Phone</label>
+                <div class='col-sm-6'>
+                    <input type='text' class="form-control" name='phone' value='<?= isset($phone)? $phone :''?>'>
+                </div>
+            </div>
+
+            <div class='row mb-3'>
+                <label for='' class='col-sm-3 col-form-label'>Address</label>
+                <div class='col-sm-6'>
+                    <input type='text' class="form-control" name='address' value='<?=isset($address) ?$address :''?>'>
+                </div>
+            </div>
+
+            <div class='row mb-3'>
+
+               <div class="offset-sm-3 col-sm-3 d-grid">
+                <a href="" type="submit" class="btn btn-success">Submit</a>
+               </div>
+
+               <div class="col-sm-3 d-grid">
+                <a href="home.php" class="btn btn-outline-danger" role="button">Cancel</a>
+               </div>
+
+            </div>
+        </form>
+    </div>
+
+</body>
+
+</html>
