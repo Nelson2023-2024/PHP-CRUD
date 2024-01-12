@@ -39,8 +39,9 @@ if($_SERVER['REQUEST_METHOD'] =='POST'){
     if(mysqli_stmt_execute($insert_stmt)){
         //if a row is affected in the DB
         if(mysqli_stmt_affected_rows($insert_stmt) == 1){
-            echo "<script>alert('Inserted sucefully')</script>";
-            header("Location: home.php");
+            echo "<script>alert('Inserted sucefully'); 
+            window.location='home.php';
+            </script>";
         }
         else{
             array_push($errors , "No affected rows");

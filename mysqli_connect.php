@@ -9,7 +9,7 @@ $dbcon = new mysqli(HOSTNAME, USERNAME, PASSWORD, DBNAME);
 
 //check connection
 if($dbcon->connect_error) echo "Connection Failed";
-else echo "Connection Succefull";
+else echo "";
 
 
 ?>

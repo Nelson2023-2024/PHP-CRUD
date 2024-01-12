@@ -1,3 +1,21 @@
+<?php
+// Checking the total number of clients in the DB
+
+    require_once("./mysqli_connect.php");
+    $count_query = "SELECT COUNT(*) AS total_users FROM clients";
+    $count_stmt = mysqli_stmt_init($dbcon);
+    mysqli_stmt_prepare($count_stmt, $count_query);
+
+    mysqli_stmt_execute($count_stmt);
+    $result = mysqli_stmt_get_result($count_stmt);
+
+    while($row = mysqli_fetch_assoc($result)){
+       $total_users =  $row['total_users'];
+    }
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -10,7 +28,13 @@
 
 <body>
     <div class="container my-5 ">
-        <h2>List of Clients</h2>
+
+         <div style='width: 200px; min-width: 100px; background: linear-gradient(yellow, orange); color: #000;' class='box' >
+        <h4>Total number of users </h4>
+        <h1 style="text-align: center;"><?= $total_users ?></h1>
+        </div>
+
+        <h3>List of Clients</h2>
         <a href="create.php" class="btn btn-primary">+ New Client</a>
         <br>
         <table class="table ">
@@ -27,7 +51,6 @@
             </thead>
             <tbody>
                 <?php 
-                require('mysqli_connect.php');
 
                 //read from DB
                 //NB - If your SQL query does not have any parameters, you don't need to use mysqli_stmt_bind_param at all.
@@ -63,6 +86,7 @@
             </tbody>
         </table>
     </div>
+
 
 </body>
 
