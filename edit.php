@@ -1,4 +1,5 @@
 <?php
+    var_dump($_POST);
     try{
         require('./mysqli_connect.php');
         $errors = [];
@@ -24,11 +25,38 @@
                     $phone = $row['phone'];
                     $address = $row['address'];
 
-                    echo $name, $email, $phone, $address;
                 }
     
             }  
         } 
+        
+        if($_SERVER["REQUEST_METHOD"] == "POST"){
+            $id = $_POST['id'];
+            $name = $_POST['name'];
+            $email = $_POST['email'];
+            $phone = $_POST['phone'];
+            $address = $_POST['address'];
+
+            var_dump($_POST);
+
+            if(empty($id) || empty($name) || empty($email) || empty($phone)|| empty($address)){
+                array_push($errors,"ALL FIELDS ARE REQIURED");
+            }
+            else{
+                $update_query = "UPDATE clients SET name = ?, email = ?, phone = ?, address = ? WHERE id = ?";
+                $update_stmt = mysqli_stmt_init($dbcon);
+                mysqli_stmt_prepare($update_stmt, $update_query);
+                mysqli_stmt_bind_param($update_stmt,'ssssi',$name, $email,$phone, $address, $id);
+                if(mysqli_stmt_execute($update_stmt)){
+                    echo "<script>alert('Succefully updated'); window.location.href = 'home.php';</script>";
+                    exit();
+                }
+                else {
+                    array_push($errors, "Failed to excecute the query");
+                }
+            }
+        }
+
     
     }
 
@@ -52,6 +80,14 @@
 
 <body>
     <div class="container my-5">
+        <?php
+        foreach($errors as $error){
+          echo "<div class='alert alert-danger' role='alert'>
+          $error
+        </div>";  
+        }
+        
+        ?>
     
     <h2>Current Details </h2>
             <table class="table">
@@ -73,7 +109,8 @@
             </table>
 
         <h2>New Client</h2>
-        <form action='create.php' method='post'>
+        <form action='' method='post'>
+            <input type="hidden" name="id" value=<?= $id ?>>
 
             <div class='row mb-3'>
                 <label for='' class='col-sm-3 col-form-label'>Name</label>
@@ -106,7 +143,7 @@
             <div class='row mb-3'>
 
                <div class="offset-sm-3 col-sm-3 d-grid">
-                <a href="" type="submit" class="btn btn-success">Submit</a>
+                <button type="submit" class="btn btn-success">Update</button>
                </div>
 
                <div class="col-sm-3 d-grid">
