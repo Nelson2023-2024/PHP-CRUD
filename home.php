@@ -29,7 +29,7 @@
 <body>
     <div class="container my-5 ">
 
-         <div style='width: 200px; min-width: 100px; background: linear-gradient(yellow, orange); color: #000;' class='box' >
+         <div style='width: 200px; min-width: 100px; background: linear-gradient(yellow, orange); color: #000; border-radius: 10px; text-align: center;' class='box' >
         <h4>Total number of users </h4>
         <h1 style="text-align: center;"><?= $total_users ?></h1>
         </div>
@@ -72,7 +72,7 @@
                     <td>$row[created_at]</td>
                     <td>
                         <a href='edit.php?id=$row[id]' class='btn btn-primary'>Edit</a>
-                        <a href='delete.php?id=$row[id]' class='btn btn-danger'>Delete</a>
+                        <a href='#' class='btn btn-danger' onclick='confirmDelete($row[id], event)'>Delete</a>
                     </td>
                 </tr>
                     ";
@@ -87,6 +87,20 @@
         </table>
     </div>
 
+    <script>
+    function confirmDelete(id, event) {
+        event.preventDefault();
+
+        const result = confirm('Are you sure you want to delete this user');
+        if (result) {
+            window.location.href = './delete.php?id=' + id;
+        }
+        else{
+            alert('RECORD NOT DELETED');
+
+        }
+    }
+</script>
 
 </body>
 
