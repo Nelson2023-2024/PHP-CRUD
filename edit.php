@@ -1,5 +1,5 @@
 <?php
-    var_dump($_POST);
+   // var_dump($_POST);
     try{
         require('./mysqli_connect.php');
         $errors = [];
@@ -19,7 +19,7 @@
                 $result = mysqli_stmt_get_result($select_stmt);
     
                 if($row = mysqli_fetch_assoc($result)){
-                    var_dump($row);
+                    //var_dump($row);
                     $name = $row['name'];
                     $email = $row['email'];
                     $phone = $row['phone'];
@@ -37,12 +37,26 @@
             $phone = $_POST['phone'];
             $address = $_POST['address'];
 
-            var_dump($_POST);
+            //var_dump($_POST);
 
             if(empty($id) || empty($name) || empty($email) || empty($phone)|| empty($address)){
                 array_push($errors,"ALL FIELDS ARE REQIURED");
             }
             else{
+                //checking duplicate entries on email
+                $check_dupliemail_query = "SELECT email FROM clients WHERE email = ?";
+                $check_dupliemail_stmt = mysqli_stmt_init($dbcon);
+                mysqli_stmt_prepare($check_dupliemail_stmt, $check_dupliemail_query);
+                mysqli_stmt_bind_param($check_dupliemail_stmt,'s', $email);
+                mysqli_stmt_execute($check_dupliemail_stmt);
+                $result = mysqli_stmt_get_result($check_dupliemail_stmt);
+
+                if($row = mysqli_fetch_assoc($result)){
+                    array_push($errors, "The email you entered already exists");
+                }
+
+
+                //update query
                 $update_query = "UPDATE clients SET name = ?, email = ?, phone = ?, address = ? WHERE id = ?";
                 $update_stmt = mysqli_stmt_init($dbcon);
                 mysqli_stmt_prepare($update_stmt, $update_query);
@@ -53,6 +67,7 @@
                 }
                 else {
                     array_push($errors, "Failed to excecute the query");
+                    
                 }
             }
         }
@@ -66,6 +81,7 @@
     catch(Error $e){
         echo $e->getMessage();
     }
+    
 
 ?>
 <!DOCTYPE html>
@@ -90,23 +106,22 @@
         ?>
     
     <h2>Current Details </h2>
-            <table class="table">
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Phone No</th>
-                    <th>Address</th>
-                </tr>
-                <tr>
-                <?="
-                    <td>$row[name]</td>
-                    <td>$row[email]</td>
-                    <td>$row[phone]</td>
-                    <td>$row[address]</td>
-                "?>
-                </tr>
-
-            </table>
+    <table class="table">
+    <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone No</th>
+        <th>Address</th>
+    </tr>
+    <?php if(isset($row)): ?>
+        <tr>
+            <td><?= $row['name'] ?? '' ?></td>
+            <td><?= $row['email'] ?? '' ?></td>
+            <td><?= $row['phone'] ?? '' ?></td>
+            <td><?= $row['address'] ?? '' ?></td>
+        </tr>
+    <?php endif; ?>
+    </table>
 
         <h2>New Client</h2>
         <form action='' method='post'>
