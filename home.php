@@ -64,12 +64,12 @@
                 while($row = mysqli_fetch_assoc($result)){
                     echo "
                 <tr>
-                    <td>$row[id]</td>
-                    <td>$row[name]</td>
-                    <td>$row[email]</td>
-                    <td>$row[phone]</td>
-                    <td>$row[address]</td>
-                    <td>$row[created_at]</td>
+                    <td class='overlay' style='cursor: not-allowed;'>$row[id]</td>
+                    <td style='cursor: not-allowed;'>$row[name]</td>
+                    <td style='cursor: not-allowed;'>$row[email]</td>
+                    <td style='cursor: not-allowed;'>$row[phone]</td>
+                    <td style='cursor: not-allowed;'>$row[address]</td>
+                    <td style='cursor: not-allowed;'>$row[created_at]</td>
                     <td>
                         <a href='edit.php?id=$row[id]' class='btn btn-primary'>Edit</a>
                         <a href='#' class='btn btn-danger' onclick='confirmDelete($row[id], event)'>Delete</a>
